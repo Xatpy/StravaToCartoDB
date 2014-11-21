@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html class="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Leapfrog StravaToCartoDB</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <style>
+          html, body, #map {
+            height: 70%;
+            padding: 0;
+            margin: 0;
+          }
+        </style>
+
+        <!--<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.11/themes/css/cartodb.css" />-->
+
+        <!-- JQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+        <!-- App Strava -->
+        <script src="app.js"></script>
+    </head>
+
+    <body onload="main()">
+        <h2>ListActivities</h2>
+        <div class="listActivities"></div>
+
+        <h2>Map</h2>
+        <p>StartMap</p>
+        <div id="map"></div>
+        <p>EndMap</p>
+        
+       <!-- include cartodb.js library -->
+        <script src="http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js"></script>
+
+    </body>
+</html>
