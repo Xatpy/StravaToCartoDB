@@ -175,6 +175,7 @@ function showStravaActivities(){
   }
 }
 
+ 
 /*
   Create a runtime visualization with CartoDB.js
 */
