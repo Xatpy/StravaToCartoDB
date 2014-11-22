@@ -1,25 +1,38 @@
-/*
-** CONFIG USER
-*/
-var user = '{Your_CDB_user}'; //CDB
-var CDB_api_key = '{Your_CDB_api_key}'; //CDB
-var access_token = '{Your_Strava_access_token}'; //Strava
+//
+// CONFIG USER
+//
+var user = 'your_user'; //CDB
+var CDB_api_key = 'your_cartodb_api_key'; //CDB
+var access_token = 'your_strava_access_token'; //Strava
 
-
-/*
-**  'Global' variables
-*/
+//
+// 'Global' variables
+//
 var activities = [];
 
 
-/*
-** FUNCTIONS
-*/
+//
+// FUNCTIONS
+//
 function main(){
   console.log('main');
-  //getStravaDataActivity();
-  //getStravaActivities();
   //checkCartoDBTables();
+  getStravaActivities();
+  //getStravaDataActivity();
+}
+
+//This functions request all activities from Strava and then insert all in CartoDB.
+function insertAllActivities(){
+  var length = activities.length;
+
+  if (length > 0) {
+    //I go through all activities to get the the ids.
+    for (var i = 0; i < activities.length; ++i) {
+      getStravaDataActivity(activities[i]);
+    }
+  } else {
+    console.error("No data activities");
+  }
 }
 
 //TODO: Cartodibify tables 
@@ -51,31 +64,31 @@ function checkCartoDBTables(){
 /*
 Insert data to CartoDB
 */
-function insertToCartoDB(steps){
+function insertToCartoDB(steps, activity){
   if (steps.length > 0) {
 
-    var table = 'strava_2';
+    var bInsertAsDate = false;
 
-    var query = "INSERT INTO " + table + "(the_geom, time) VALUES ";
+    var table = 'strava_3';
+
+    var query = "INSERT INTO " + table + "(the_geom, time, date) VALUES ";
     var length = steps.length;
     var lat,long;
     for (var i = 0; i < length; ++i) {
       lat = steps[i][0];
       long = steps[i][1];
-      query += "(ST_GeomFromText('POINT(" + long + " " + lat + ")',4326)," + steps[i][2] + ")";
+      query += "(ST_GeomFromText('POINT(" + long + " " + lat + ")',4326)," + steps[i][2] + ", " + (bInsertAsDate ? "TIMESTAMP '" : "'" ) + activity.date + "')";
       if (i != length -1) {
         query += ",";
       }
     }
     query += ";";
 
-    var url = "http://" + user + ".cartodb.com/api/v2/sql?q=" + query + "&api_key=" + CDB_api_key;
-
     var url_post = "https://" + user + ".cartodb.com/api/v2/sql";
 
     $.post( url_post, {type: 'post', datatype: 'json', q: query, crossDomain: true, api_key:CDB_api_key} )
       .done(function (data) {
-        console.log('abc');
+        console.log('Data inserted');
       })
       .error(function(){
         console.log('error!!!!!');
@@ -115,15 +128,18 @@ function getStravaActivities() {
     console.log(data);
     fillListActivities(data);
     showStravaActivities();
+    insertAllActivities();
+
   })
   .error(function(err) {
     console.log('Error getting Strava activities ' + err);
   });
 }
 
-function getStravaDataActivity() {
+function getStravaDataActivity(activity) {
 
-  var url = "https://www.strava.com/api/v3/activities/214545474/streams/latlng?&access_token=" + access_token + "&callback=?";
+  //var url = "https://www.strava.com/api/v3/activities/214545474/streams/latlng?&access_token=" + access_token + "&callback=?";
+  var url = "https://www.strava.com/api/v3/activities/" + activity.id + "/streams/latlng?&access_token=" + access_token + "&callback=?";
   $.getJSON( url, function (data) {
 
     var steps = [];
@@ -137,7 +153,7 @@ function getStravaDataActivity() {
       steps[i] = dt;
     }
 
-    insertToCartoDB(steps);
+    insertToCartoDB(steps, activity);
   });
 }
 
