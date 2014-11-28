@@ -1,9 +1,9 @@
 //
 // CONFIG USER
 //
-var user = 'your_user'; //CDB
-var CDB_api_key = 'your_cartodb_api_key'; //CDB
-var access_token = 'your_strava_access_token'; //Strava
+ var user = 'your_user'; //CDB
+ var CDB_api_key = 'your_cartodb_api_key'; //CDB
+ var access_token = 'your_strava_access_token'; //Strava
 
 //
 // 'Global' variables
@@ -16,9 +16,15 @@ var activities = [];
 //
 function main(){
   console.log('main');
-  //checkCartoDBTables();
+
   getStravaActivities();
+  getStravaAthlete();
+
+  //checkCartoDBTables();
   //getStravaDataActivity();
+
+  createMap();
+  //createVis();
 }
 
 //This functions request all activities from Strava and then insert all in CartoDB.
@@ -68,7 +74,6 @@ function insertToCartoDB(steps, activity){
   if (steps.length > 0) {
 
     var bInsertAsDate = false;
-
     var table = 'strava_3';
 
     var query = "INSERT INTO " + table + "(the_geom, time, date) VALUES ";
@@ -125,11 +130,37 @@ function getStravaActivities() {
   url += access_token + "&callback=?";
 
   $.getJSON( url, function (data) {
+
+  })
+  .done(function(data) {
     console.log(data);
     fillListActivities(data);
     showStravaActivities();
-    insertAllActivities();
+    //insertAllActivities();
+  })
+  .error(function(err) {
+    console.log('Error getting Strava activities ' + err);
+  });
+}
 
+function showUserImage(urlImage){
+    var image = '<img src="' + (urlImage) + '""></img>';
+    $( ".user_photo" ).append( image );
+} 
+
+function getStravaAthlete() {
+
+  var url = "https://www.strava.com/api/v3/athlete?access_token=";
+  url += access_token + "&callback=?";
+
+  $.getJSON( url, function (data) {
+
+  })
+  .done(function(data) {
+    if (data) {
+      console.log(data);
+      showUserImage(data.profile);    
+    }
   })
   .error(function(err) {
     console.log('Error getting Strava activities ' + err);
@@ -137,7 +168,6 @@ function getStravaActivities() {
 }
 
 function getStravaDataActivity(activity) {
-
   //var url = "https://www.strava.com/api/v3/activities/214545474/streams/latlng?&access_token=" + access_token + "&callback=?";
   var url = "https://www.strava.com/api/v3/activities/" + activity.id + "/streams/latlng?&access_token=" + access_token + "&callback=?";
   $.getJSON( url, function (data) {
@@ -175,22 +205,27 @@ function showStravaActivities(){
   }
 }
 
- 
 /*
   Create a runtime visualization with CartoDB.js
 */
 function createMap(){
   //TODO: Calcular punto de centro automáticamente
+
   var map = new L.Map('map', {
       center: [40.1916,-3.6692],
       zoom: 13
     });
 
+  var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+  })
+  .addTo(map);
+
   cartodb.createLayer(map, {
-        user_name: user,
+        user_name: 'xatpy',
         type: 'cartodb',
         sublayers: [{
-          sql: "SELECT * FROM strava",
+          sql: "SELECT * FROM strava_torque_cat",
           cartocss: '#strava {marker-fill: #FF0100;}'
         }]
   })
@@ -200,6 +235,33 @@ function createMap(){
       })
   .done(function(vis, layers) {
       console.log('map loaded');
+  })
+  .error(function(err) {
+    console.log(err);
+  });
+}
+
+function createVis() {
+  //cartodb.createVis('map', 'http://documentation.cartodb.com/api/v2/viz/2b13c956-e7c1-11e2-806b-5404a6a683d5/viz.json', {
+  cartodb.createVis('map', 'http://team.cartodb.com/api/v2/viz/29edc996-726c-11e4-887c-0e018d66dc29/viz.json', {
+      shareable: true,
+      title: true,
+      description: true,
+      search: true,
+      tiles_loader: true,
+      center_lat: 0,
+      center_lon: 0,
+      zoom: 2
+  })
+  .done(function(vis, layers) {
+    // layer 0 is the base layer, layer 1 is cartodb layer
+    // setInteraction is disabled by default
+    layers[1].setInteraction(true);
+    layers[1].on('featureOver', function(e, pos, latlng, data) {
+      cartodb.log.log(e, pos, latlng, data);
+    });
+    // you can get the native map to work with it
+    var map = vis.getNativeMap();
   })
   .error(function(err) {
     console.log(err);
