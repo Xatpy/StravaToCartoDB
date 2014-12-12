@@ -21,7 +21,6 @@ function main(){
   getStravaAthlete();
 
   //checkCartoDBTables();
-  //getStravaDataActivity();
 
   createMap();
   //createVis();
@@ -137,6 +136,10 @@ function getStravaActivities() {
     fillListActivities(data);
     showStravaActivities();
     //insertAllActivities();
+
+    if (data) {
+      getStravaDataActivity(data[0]);
+    }
   })
   .error(function(err) {
     console.log('Error getting Strava activities ' + err);
@@ -168,8 +171,12 @@ function getStravaAthlete() {
 }
 
 function getStravaDataActivity(activity) {
+
+  //resolution { low, medium, high} . Source: http://strava.github.io/api/v3/streams/
+  var resolution = "high";
+
   //var url = "https://www.strava.com/api/v3/activities/214545474/streams/latlng?&access_token=" + access_token + "&callback=?";
-  var url = "https://www.strava.com/api/v3/activities/" + activity.id + "/streams/latlng?&access_token=" + access_token + "&callback=?";
+  var url = "https://www.strava.com/api/v3/activities/" + activity.id + "/streams/latlng?&access_token=" + access_token + "&resolution=" + resolution + "&callback=?";
   $.getJSON( url, function (data) {
 
     var steps = [];
