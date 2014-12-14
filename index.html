@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>StravaToCartoDB by Xatpy</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/Xatpy/StravaToCartoDB">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>StravaToCartoDB</h1>
+            <h2>From Strava data to CartoDB maps</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/Xatpy/StravaToCartoDB/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/Xatpy/StravaToCartoDB/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a id="stravatocartodb" class="anchor" href="#stravatocartodb" aria-hidden="true"><span class="octicon octicon-link"></span></a>StravaToCartoDB</h1>
+
+<h2>
+<a id="from-strava-data-to-cartodb-maps" class="anchor" href="#from-strava-data-to-cartodb-maps" aria-hidden="true"><span class="octicon octicon-link"></span></a>From Strava data to CartoDB maps</h2>
+
+<p>Import your data in CartoDB from Strava app, and create fancy maps about where you run. </p>
+
+<h2>
+<a id="instructions" class="anchor" href="#instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instructions</h2>
+
+<p>Create a table in your CartoDB with the following columns:</p>
+
+<ul>
+<li>name (string)</li>
+<li>time (number)</li>
+<li>date (string)</li>
+</ul>
+
+<p>Then, insert your table name in app.js</p>
+
+<h3>
+<a id="history" class="anchor" href="#history" aria-hidden="true"><span class="octicon octicon-link"></span></a>History</h3>
+
+<p>11-28-2014: Get athlete photo and insert a map in the index.</p>
+
+<p>11-22-2014: Insert all Strava activity to one CartoDB table. Example <a href="http://team.cartodb.com/u/xatpy/viz/29edc996-726c-11e4-887c-0e018d66dc29/embed_map">TorqueCat map:</a></p>
+
+<p>11-21-2014: First commit. Get list activities from Strava. Get info activity and insert to CartoDB.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/Xatpy">Xatpy</a> can be found on <a href="https://github.com/Xatpy/StravaToCartoDB">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
