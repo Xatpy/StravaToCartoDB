@@ -1,9 +1,9 @@
 //
 // CONFIG USER
 //
- var user = 'your_user'; //CDB
- var CDB_api_key = 'your_cartodb_api_key'; //CDB
- var access_token = 'your_strava_access_token'; //Strava
+ var user = 'Xatpy'; //CDB
+ var CDB_api_key = '34a6b799274356f5353e2873a9577182089f0772'; //CDB
+ var access_token = '0cc4ee4d6b33cbac8993624616c2a5cd53e53ccb'; //Strava
 
 //
 // 'Global' variables
@@ -73,9 +73,9 @@ function insertToCartoDB(steps, activity){
   if (steps.length > 0) {
 
     var bInsertAsDate = false;
-    var table = 'strava_3';
+    var table = 'strava_prep_media';
 
-    var query = "INSERT INTO " + table + "(the_geom, time, date) VALUES ";
+    var query = "INSERT INTO " + table + " (the_geom, time, date) VALUES ";
     var length = steps.length;
     var lat,long;
     for (var i = 0; i < length; ++i) {
@@ -91,6 +91,7 @@ function insertToCartoDB(steps, activity){
     var url_post = "https://" + user + ".cartodb.com/api/v2/sql";
 
     $.post( url_post, {type: 'post', datatype: 'json', q: query, crossDomain: true, api_key:CDB_api_key} )
+    //$.post( url_post, {type: 'post', q: query,  api_key:CDB_api_key } )
       .done(function (data) {
         console.log('Data inserted');
       })
@@ -133,13 +134,15 @@ function getStravaActivities() {
   })
   .done(function(data) {
     console.log(data);
+
     fillListActivities(data);
     showStravaActivities();
-    //insertAllActivities();
 
-    if (data) {
-      getStravaDataActivity(data[0]);
-    }
+    insertAllActivities();
+
+    // if (data) {
+    //   getStravaDataActivity(data[0]);
+    // }
   })
   .error(function(err) {
     console.log('Error getting Strava activities ' + err);
@@ -189,7 +192,7 @@ function getStravaDataActivity(activity) {
 
       steps[i] = dt;
     }
-
+debugger
     insertToCartoDB(steps, activity);
   });
 }
