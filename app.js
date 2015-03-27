@@ -1,9 +1,9 @@
 //
 // CONFIG USER
 //
- var user = 'Xatpy'; //CDB
- var CDB_api_key = '34a6b799274356f5353e2873a9577182089f0772'; //CDB
- var access_token = '0cc4ee4d6b33cbac8993624616c2a5cd53e53ccb'; //Strava
+ var user = ''; //CDB
+ var CDB_api_key = ''; //CDB
+ var access_token = ''; //Strava
 
 //
 // 'Global' variables
